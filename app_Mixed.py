@@ -202,8 +202,10 @@ def create_ui():
     
             if target_language:
                 # Translation
-                translated_text = translate(clean_text(r), from_lang='en', to_lang=LANGUAGES[target_language])
-
+                if(language != LANGUAGES[target_language]):
+                    translated_text = translate(clean_text(r), from_lang= language, to_lang=LANGUAGES[target_language])
+                else:
+                    translated_text = r
             # Display the translation
             # st.subheader('Translated Text')
             st.write( translated_text + "\n\n" + translate("For more details, please visit", from_lang='en', to_lang=LANGUAGES[target_language]) + ": " + post_link)
