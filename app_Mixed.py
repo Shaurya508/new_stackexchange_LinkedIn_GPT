@@ -209,8 +209,8 @@ def create_ui():
                 else:
                     if(language != LANGUAGES[target_language]):
                         # print(language + "\n" + LANGUAGES[target_language])
-                        translated_text = translate(clean_text(r), from_lang= language, to_lang=LANGUAGES[target_language])
-                        added_text = translate("For more details, please visit", from_lang= language, to_lang=LANGUAGES[target_language])
+                        translated_text = translate(clean_text(r1), from_lang= "en" , to_lang=LANGUAGES[target_language])
+                        added_text = translate("For more details, please visit", from_lang= "en", to_lang=LANGUAGES[target_language])
                     else:
                         translated_text = clean_text(r)
                         if(language != "en"):
