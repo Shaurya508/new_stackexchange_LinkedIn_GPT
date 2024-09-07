@@ -187,6 +187,7 @@ def create_ui():
     for idx , (q, r , url , post_link , language) in enumerate(st.session_state.conversation_history):
         st.markdown(f"<p style='text-align: right; color: #484f4f;'><b>{q}</b></p>", unsafe_allow_html=True)
         col1, col2 = st.columns([1, 8])
+        r1 = r
         with col1:
             st.image('download.png', width=30)
         with col2:
@@ -203,7 +204,7 @@ def create_ui():
             if target_language:
                 # Translation
                 if(target_language == "English"):
-                    st.write(r)
+                    st.write(r1)
                 else:
                     if(language != LANGUAGES[target_language]):
                         translated_text = translate(clean_text(r), from_lang= language, to_lang=LANGUAGES[target_language])
