@@ -208,6 +208,7 @@ def create_ui():
                     st.write("For more details, please visit : " + post_link)
                 else:
                     if(language != LANGUAGES[target_language]):
+                        print(language + "\n" + LANGUAGES[target_language])
                         translated_text = translate(clean_text(r), from_lang= language, to_lang=LANGUAGES[target_language])
                         added_text = translate("For more details, please visit", from_lang= language, to_lang=LANGUAGES[target_language])
                     else:
