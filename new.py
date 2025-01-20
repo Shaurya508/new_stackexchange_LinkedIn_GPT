@@ -220,7 +220,7 @@ def user_input(user_question):
     # image_address = urls[-1] if urls else None
     # post_link = urls[0]
     response = chain({"input_documents": docs, "question": user_question}, return_only_outputs=True)
-    return response, image_address , post_link , language
+    return response, None , None , language
 
 def extract_links(pdf_path):
     links = []
