@@ -86,8 +86,6 @@ pyarrow-hotfix==0.6
 pyasn1==0.6.0
 pyasn1_modules==0.4.0
 pycparser==2.22
-pydantic
-pydantic_core==2.20.1
 pydeck==0.9.1
 Pygments==2.18.0
 PyMuPDF==1.24.7
@@ -142,3 +140,4 @@ xxhash==3.4.1
 yarl==1.9.4
 Levenshtein
 langid
+pydantic
