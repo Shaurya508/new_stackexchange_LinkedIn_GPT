@@ -164,9 +164,9 @@ def user_input1(user_question):
     chain = load_qa_chain(model, chain_type="stuff", prompt=prompt)
     embeddings = GoogleGenerativeAIEmbeddings(model="models/embedding-001")  # Model for creating vector embeddings
     new_db = FAISS.load_local("faiss_index_stackexchange", embeddings, allow_dangerous_deserialization=True)  # Load the previously saved vector db
-
-    mq_retriever = MultiQueryRetriever.from_llm(retriever = new_db.as_retriever(search_kwargs={'k': 1}) , llm =  model)
-    docs = mq_retriever.get_relevant_documents(query=user_question)
+    docs = new_db.similarity_search(query=user_question, k = 5)
+    # mq_retriever = MultiQueryRetriever.from_llm(retriever = new_db.as_retriever(search_kwargs={'k': 1}) , llm =  model)
+    # docs = mq_retriever.get_relevant_documents(query=user_question)
     # Regular expression to find the last URL
     page_content = docs[0].page_content
     # Find all URLs in the page_content
