@@ -220,14 +220,14 @@ def create_ui():
                 # Display the translation
                 # st.subheader('Translated Text')
                     st.write( translated_text + "\n\n" + added_text + ": " + post_link)
-        image_link = get_image_link(post_link)
-        if image_link is not None and url is not None:
-            try:
-                response = requests.get(image_link)
-                img = Image.open(BytesIO(response.content))
-                st.image(img, use_column_width=True)
-            except UnidentifiedImageError:
-                pass
+        # image_link = get_image_link(post_link)
+        # if image_link is not None and url is not None:
+        #     try:
+        #         response = requests.get(image_link)
+        #         img = Image.open(BytesIO(response.content))
+        #         st.image(img, use_column_width=True)
+        #     except UnidentifiedImageError:
+        #         pass
                     
     # Get user input at the bottom
     st.markdown("---")
