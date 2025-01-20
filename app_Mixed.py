@@ -273,9 +273,9 @@ def create_ui():
     #             st.session_state.generate_response = False
     #             st.rerun()
     
-    col1 = st.columns([1], gap="small")[0]  # Single column layout for the button
-    with col1:
-        workshop_button = st.form_submit_button(label='Chat with MMM workshop')
+    # col1 = st.columns([1], gap="small")[0]  # Single column layout for the button
+    # with col1:
+    workshop_button = st.form_submit_button(label='Chat with MMM workshop')
 
     if workshop_button and question:
         st.session_state.generate_response = 'mmm_workshop'
