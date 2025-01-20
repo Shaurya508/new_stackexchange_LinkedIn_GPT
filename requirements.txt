@@ -140,4 +140,6 @@ xxhash==3.4.1
 yarl==1.9.4
 Levenshtein
 langid
-pydantic==1.10.13
+pydantic==2.8.2
+pydantic-settings==2.5.2
+pydantic_core==2.20.1
