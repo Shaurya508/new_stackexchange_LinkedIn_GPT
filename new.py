@@ -214,11 +214,11 @@ def user_input(user_question):
     # Regular expression to find the last URL
     page_content = docs[0].page_content
     # Find all URLs in the page_content
-    urls = re.findall(r'https?://\S+', page_content)
+    # urls = re.findall(r'https?://\S+', page_content)
 
     # Get the last URL from the list
-    image_address = urls[-1] if urls else None
-    post_link = urls[0]
+    # image_address = urls[-1] if urls else None
+    # post_link = urls[0]
     response = chain({"input_documents": docs, "question": user_question}, return_only_outputs=True)
     return response, image_address , post_link , language
 
