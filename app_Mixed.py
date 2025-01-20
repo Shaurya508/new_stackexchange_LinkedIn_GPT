@@ -250,8 +250,8 @@ def create_ui():
     
         if linkedin_button and question:
             st.session_state.generate_response = 'Chat with MMM workshop'
-        elif stackexchange_button and question:
-            st.session_state.generate_response = 'stackexchange'
+        # elif stackexchange_button and question:
+        #     st.session_state.generate_response = 'stackexchange'
     
     if st.session_state.generate_response and question:
         if st.session_state.query_count >= QUERY_LIMIT:
