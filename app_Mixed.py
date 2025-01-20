@@ -246,7 +246,7 @@ def create_ui():
         # col1, col2 = st.columns(2)
         col1, col2 = st.columns([1,2], gap="small")
         with col1:
-            linkedin_button = st.form_submit_button(label='Chat with LinkedIn posts')
+            linkedin_button = st.form_submit_button(label='Chat with MMM workshops')
         with col2:
             stackexchange_button = st.form_submit_button(label='Chat with StackExchange')
     
@@ -272,29 +272,6 @@ def create_ui():
                 st.session_state.query_count += 1  # Increment the query count
                 st.session_state.generate_response = False
                 st.rerun()
-    
-    # col1 = st.columns([1], gap="small")[0]  # Single column layout for the button
-    # with col1:
-    # workshop_button = st.form_submit_button(label='Chat with MMM workshop')
-
-    # if workshop_button and question:
-    #     st.session_state.generate_response = 'mmm_workshop'
-
-    # if st.session_state.generate_response and question:
-    #     if st.session_state.query_count >= QUERY_LIMIT:
-    #         st.warning("You have reached the limit of free queries. Please consider our pricing options for further use.")
-    #     else:
-    #         with st.spinner("Generating response..."):
-    #             # Call the user_input function for the MMM workshop
-    #             response, image_address, post_link, language = user_input(question)
-            
-    #             output_text = response.get('output_text', 'No response')  # Extract the 'output_text' from the response
-    #             st.session_state.chat += str(output_text)
-    #             st.session_state.conversation_history.append((question, output_text, image_address, post_link, language))
-    #             st.session_state.suggested_question = ""  # Reset the suggested question after submission
-    #             st.session_state.query_count += 1  # Increment the query count
-    #             st.session_state.generate_response = False
-    #             st.rerun()
 
 
 
