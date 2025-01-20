@@ -205,7 +205,7 @@ def create_ui():
                 # Translation
                 if(target_language == "English"):
                     st.write(r1)
-                    st.write("For more details, please visit : " + post_link)
+                    # st.write("For more details, please visit : " + post_link)
                 else:
                     if(language != LANGUAGES[target_language]):
                         # print(language + "\n" + LANGUAGES[target_language])
@@ -219,7 +219,7 @@ def create_ui():
                             added_text = "For more details, please visit"
                 # Display the translation
                 # st.subheader('Translated Text')
-                    st.write( translated_text + "\n\n" + added_text + ": " + post_link)
+                    # st.write( translated_text + "\n\n" + added_text + ": " + post_link)
         # image_link = get_image_link(post_link)
         # if image_link is not None and url is not None:
         #     try:
