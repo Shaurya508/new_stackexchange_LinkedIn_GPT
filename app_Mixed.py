@@ -260,8 +260,8 @@ def create_ui():
             with st.spinner("Generating response..."):
                 if st.session_state.generate_response == 'linkedin':
                     response, image_address, post_link, language = user_input(question)
-                elif st.session_state.generate_response == 'stackexchange':
-                    response, image_address, post_link ,language = user_input1(question)
+                # elif st.session_state.generate_response == 'stackexchange':
+                #     response, image_address, post_link ,language = user_input1(question)
                     
                 output_text = response.get('output_text', 'No response')  # Extract the 'output_text' from the response
                 st.session_state.chat += str(output_text)
