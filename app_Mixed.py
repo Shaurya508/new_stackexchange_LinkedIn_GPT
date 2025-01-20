@@ -106,9 +106,9 @@ def create_ui():
     """
 
     st.markdown(hide_streamlit_style, unsafe_allow_html=True)
-    st.markdown("<h2 style='text-align: center; color: #0adbfc;'><u> Venkat's LinkedIn GPT</u></h2>", unsafe_allow_html=True)
+    st.markdown("<h2 style='text-align: center; color: #0adbfc;'><u>Chat with MMM Workshop</u></h2>", unsafe_allow_html=True)
     st.sidebar.image("Aryma Labs Logo.jpeg")
-    st.sidebar.markdown("<h3 style='color: #08daff;'>Welcome to Venkat's LinkedIn GPT</h2>", unsafe_allow_html=True)
+    st.sidebar.markdown("<h3 style='color: #08daff;'>Chat with MMM Workshop</h2>", unsafe_allow_html=True)
     # st.sidebar.write("Ask anything about MMM and get accurate answers.")
     
 
@@ -183,7 +183,7 @@ def create_ui():
                 st.image('download.png', width=30)
             with col2:
                 
-                st.write("Hello, I am Venkat's LinkedIn GPT . How can I help you?")
+                st.write("Hello, I am MMM GPT . How can I help you?")
     for idx , (q, r , url , post_link , language) in enumerate(st.session_state.conversation_history):
         st.markdown(f"<p style='text-align: right; color: #484f4f;'><b>{q}</b></p>", unsafe_allow_html=True)
         col1, col2 = st.columns([1, 8])
