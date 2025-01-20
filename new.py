@@ -188,7 +188,7 @@ def user_input1(user_question):
 
 def user_input(user_question):
     prompt_template = """
-    Explain the LinkedIn post in the context in as much detail as possible.
+    Give answers according to the question asked according to to the transcripts data in the context. The context is about the MMM(Maerketing Mix Modelling) workshop. 
     Context:\n{context}?\n
     Question:\n{question}. + Explain in detail.\n
     Answer:
