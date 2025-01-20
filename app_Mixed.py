@@ -243,15 +243,17 @@ def create_ui():
         )
         
         # Buttons placed below the text box
-        col1, col2 = st.columns(2)
+        # col1, col2 = st.columns(2)
         col1, col2 = st.columns([1,2], gap="small")
         with col1:
             linkedin_button = st.form_submit_button(label='Chat with LinkedIn posts')
+        with col2:
+            stackexchange_button = st.form_submit_button(label='Chat with StackExchange')
     
         if linkedin_button and question:
-            st.session_state.generate_response = 'Chat with MMM workshop'
-        # elif stackexchange_button and question:
-        #     st.session_state.generate_response = 'stackexchange'
+            st.session_state.generate_response = 'linkedin'
+        elif stackexchange_button and question:
+            st.session_state.generate_response = 'stackexchange'
     
     if st.session_state.generate_response and question:
         if st.session_state.query_count >= QUERY_LIMIT:
@@ -260,8 +262,8 @@ def create_ui():
             with st.spinner("Generating response..."):
                 if st.session_state.generate_response == 'linkedin':
                     response, image_address, post_link, language = user_input(question)
-                # elif st.session_state.generate_response == 'stackexchange':
-                #     response, image_address, post_link ,language = user_input1(question)
+                elif st.session_state.generate_response == 'stackexchange':
+                    response, image_address, post_link ,language = user_input1(question)
                     
                 output_text = response.get('output_text', 'No response')  # Extract the 'output_text' from the response
                 st.session_state.chat += str(output_text)
