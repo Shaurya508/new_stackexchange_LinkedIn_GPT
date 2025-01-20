@@ -219,7 +219,7 @@ def create_ui():
                         #     added_text = "For more details, please visit"
                 # Display the translation
                 st.subheader('Translated Text')
-                    st.write( translated_text)
+                st.write( translated_text)
         # image_link = get_image_link(post_link)
         # if image_link is not None and url is not None:
         #     try:
