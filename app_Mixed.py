@@ -194,10 +194,10 @@ def create_ui():
             if(language != "en"):
                 r = translate(clean_text(r) , "en" , language)
             st.write(r + "\n")
-            if(language != "en"):
-                st.write(translate("For more details, please visit", from_lang='en', to_lang= language) + ": " + post_link)
-            else:
-                st.write("For more details, please visit :" + post_link)
+            # if(language != "en"):
+            #     st.write(translate("For more details, please visit", from_lang='en', to_lang= language) + ": " + post_link)
+            # else:
+            #     st.write("For more details, please visit :" + post_link)
             target_language = st.selectbox('Select target language', options=list(LANGUAGES.keys()), key=f'target_language_{idx}')
         if st.button('Translate', key=f'translate_button_{idx}'):
     
@@ -213,13 +213,13 @@ def create_ui():
                         added_text = translate("For more details, please visit", from_lang= "en", to_lang=LANGUAGES[target_language])
                     else:
                         translated_text = clean_text(r)
-                        if(language != "en"):
-                            added_text = translate("For more details, please visit", from_lang= "en", to_lang= language)
-                        else:
-                            added_text = "For more details, please visit"
+                        # if(language != "en"):
+                        #     added_text = translate("For more details, please visit", from_lang= "en", to_lang= language)
+                        # else:
+                        #     added_text = "For more details, please visit"
                 # Display the translation
-                # st.subheader('Translated Text')
-                    # st.write( translated_text + "\n\n" + added_text + ": " + post_link)
+                st.subheader('Translated Text')
+                    st.write( translated_text)
         # image_link = get_image_link(post_link)
         # if image_link is not None and url is not None:
         #     try:
