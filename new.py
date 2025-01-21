@@ -208,7 +208,7 @@ def user_input(user_question):
     # new_db = FAISS.load_local("faiss_index_images", embeddings, allow_dangerous_deserialization=True)  # Load the previously saved vector db
     new_db1 = FAISS.load_local("faiss_index_DS", embeddings,allow_dangerous_deserialization=True)
     # new_db1.merge_from(new_db)
-    mq_retriever = MultiQueryRetriever.from_llm(retriever = new_db1.as_retriever(search_kwargs={'k': 1}) , llm =  model)
+    mq_retriever = MultiQueryRetriever.from_llm(retriever = new_db1.as_retriever(search_kwargs={'k': 5}) , llm =  model)
     docs = mq_retriever.get_relevant_documents(query=user_question)
     print(docs)
     # Regular expression to find the last URL
