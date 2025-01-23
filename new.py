@@ -191,7 +191,7 @@ def user_input(user_question):
     Give answers according to the question asked according to to the transcripts data in the context. The context is about the MMM(Maerketing Mix Modelling) workshop.\n
     Also please write the date from the File name from the transcripts data paragraph from which answer is most relatable .\n 
     Also please write the time from the context from the transcripts data paragraph from which answer is most relatable .\n
-    Wite date and time in next line after the response .  
+    Write date and time in next line after the response .  
     Context:\n{context}?\n
     Question:\n{question}. + Explain in detail.\n
     Answer:
