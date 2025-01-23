@@ -184,7 +184,7 @@ def create_ui():
             with col2:
                 
                 st.write("Hello, I am MMM GPT . How can I help you?")
-    for idx , (q, r , url , post_link , language) in enumerate(st.session_state.conversation_history):
+    for idx , (q, r , image_address , post_link , language) in enumerate(st.session_state.conversation_history):
         st.markdown(f"<p style='text-align: right; color: #484f4f;'><b>{q}</b></p>", unsafe_allow_html=True)
         col1, col2 = st.columns([1, 8])
         r1 = r
@@ -221,7 +221,18 @@ def create_ui():
                 # st.subheader('Translated Text')
                 st.write( translated_text)
         # image_link = get_image_link(post_link)
-        # if image_link is not None and url is not None:
+        if image_address is not None:
+            try:
+                img_path = f'extracted_images/{image_address}.png'
+                img = Image.open(img_path)
+                st.image(img, use_column_width=True)
+            except FileNotFoundError:
+                try:
+                    img_path = f'extracted_images/{image_address}.jpg'
+                    img = Image.open(img_path)
+                    st.image(img, use_column_width=True)
+                except FileNotFoundError:
+                    st.write("Image not found.")
         #     try:
         #         response = requests.get(image_link)
         #         img = Image.open(BytesIO(response.content))

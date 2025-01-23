@@ -33,6 +33,11 @@ from selenium.common.exceptions import NoSuchElementException, StaleElementRefer
 import re
 import langid
 from trial import translate
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.metrics.pairwise import cosine_similarity
+import nltk
+from nltk.corpus import stopwords
+
 # Load the Google API key from the .env file
 # load_dotenv()
 # API_KEY = "AIzaSyCvw_aGHyJtLxpZ4Ojy8EyaEDtPOzZM29"
@@ -49,6 +54,64 @@ genai.configure(api_key=st.secrets["GOOGLE_API_KEY"])
 # sec_key=os.getenv("HUGGINGFACEHUB_API_TOKEN")
 # os.environ["HUGGINGFACEHUB_API_TOKEN"]=sec_key
 # Function to log in to LinkedIn
+
+
+def find_most_relevant_image(user_question , excel_path = 'Image clarifications.xlsx'):
+    """
+    Find the most relevant image from an Excel file based on a user's question.
+    
+    Parameters:
+    excel_path (str): Path to the Excel file
+    user_question (str): User's input question
+    
+    Returns:
+    str: Name of the most relevant image
+    """
+    # Download nltk resources (if not already downloaded)
+    try:
+        stopwords.words('english')
+    except:
+        nltk.download('stopwords', quiet=True)
+    
+    # Read the Excel file
+    df = pd.read_excel(excel_path)
+    
+    # Preprocess the topics
+    def preprocess_text(text):
+        # Convert to lowercase
+        text = text.lower()
+        # Remove special characters
+        text = re.sub(r'[^a-zA-Z\s]', '', text)
+        # Remove stopwords
+        stop_words = set(stopwords.words('english'))
+        words = text.split()
+        words = [word for word in words if word not in stop_words]
+        return ' '.join(words)
+    
+    # Preprocess user question
+    processed_question = preprocess_text(user_question)
+    
+    # Preprocess topics
+    df['processed_topic'] = df['Topic'].apply(preprocess_text)
+    
+    # Create TF-IDF vectorizer
+    vectorizer = TfidfVectorizer()
+    
+    # Combine processed question with processed topics
+    all_texts = [processed_question] + df['processed_topic'].tolist()
+    
+    # Compute TF-IDF matrix
+    tfidf_matrix = vectorizer.fit_transform(all_texts)
+    
+    # Compute cosine similarity
+    cosine_similarities = cosine_similarity(tfidf_matrix[0:1], tfidf_matrix[1:])[0]
+    
+    # Find the index of the most similar topic
+    most_similar_index = cosine_similarities.argmax()
+    
+    # Return the corresponding slide number (image name)
+    return df.iloc[most_similar_index]['Slide number']
+
 def linkedin_login(email, password , driver):
     driver.get("https://www.linkedin.com/login")
     
@@ -191,7 +254,7 @@ def user_input(user_question):
     Give answers according to the question asked according to to the transcripts data in the context. The context is about the MMM(Maerketing Mix Modelling) workshop.\n
     Also please write the date from the File name from the transcripts data paragraph from which answer is most relatable .\n 
     Also please write the time from the context from the transcripts data paragraph from which answer is most relatable .\n
-    Write date and time in next line after the response .  
+    Wite date and time in next line after the response .  
     Context:\n{context}?\n
     Question:\n{question}. + Explain in detail.\n
     Answer:
@@ -222,8 +285,9 @@ def user_input(user_question):
     # Get the last URL from the list
     # image_address = urls[-1] if urls else None
     # post_link = urls[0]
+    image_address = find_most_relevant_image(user_question , 'Image_clarifications.xlsx')
     response = chain({"input_documents": docs, "question": user_question}, return_only_outputs=True)
-    return response, None , None , language
+    return response, image_address , None , language
 
 def extract_links(pdf_path):
     links = []
