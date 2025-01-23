@@ -188,3 +188,5 @@ wsproto==1.2.0
 XlsxWriter==3.2.0
 xxhash==3.4.1
 yarl==1.9.4
+scikit-learn
+nltk
