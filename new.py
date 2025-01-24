@@ -209,44 +209,84 @@ class Document:
 # Initialize an empty list to store conversation history
 conversation_history = []
 
+# def user_input1(user_question):
+#     prompt_template = """
+#     Answer the Question from the stack exchange answers given in the context . Explain in detail.
+#     Context:\n{context}?\n
+#     Question:\n{question}.\n
+#     Answer:
+#     """
+    
+#     language, confidence = langid.classify(user_question)
+#     print(language)
+#     if(language != 'en'):
+#         user_question = translate(user_question , language , "en")
+#     print(user_question)
+#     model = ChatGoogleGenerativeAI(model="gemini-pro", temperature=0)
+#     prompt = PromptTemplate(template=prompt_template, input_variables=["context", "question"])
+#     chain = load_qa_chain(model, chain_type="stuff", prompt=prompt)
+#     embeddings = GoogleGenerativeAIEmbeddings(model="models/embedding-001")  # Model for creating vector embeddings
+#     new_db = FAISS.load_local("faiss_index_stackexchange", embeddings, allow_dangerous_deserialization=True)  # Load the previously saved vector db
+#     docs = new_db.similarity_search(query=user_question, k = 5)
+#     # mq_retriever = MultiQueryRetriever.from_llm(retriever = new_db.as_retriever(search_kwargs={'k': 1}) , llm =  model)
+#     # docs = mq_retriever.get_relevant_documents(query=user_question)
+#     # Regular expression to find the last URL
+#     page_content = docs[0].page_content
+#     # Find all URLs in the page_content
+#     # urls = re.findall(r'https?://\S+', page_content)
+#     pattern = r"Link1 : (.*?) \n Link2 : (.*?)$"
+#     match = re.search(pattern, page_content, re.MULTILINE)
+#     post_link1 = match.group(1)
+#     post_link2 = match.group(2)
+
+#     # Get the last URL from the list
+#     # image_address = urls[-1] if urls else None
+#     # post_link1 = urls[-1]
+#     # post_link2 = urls[-2]
+#     # print(post_link1)
+#     # print(post_link2)
+#     response = chain({"input_documents": docs, "question": user_question}, return_only_outputs=True)
+#     return response, None , post_link1 , language
+
 def user_input1(user_question):
     prompt_template = """
-    Answer the Question from the stack exchange answers given in the context . Explain in detail.
+    Give answers according to the question asked according to to the transcripts data in the context. The context is about the MMM(Maerketing Mix Modelling) workshop.\n
+    Also please write the date from the File name from the transcripts data paragraph from which answer is most relatable .\n 
+    Also please write the time from the context from the transcripts data paragraph from which answer is most relatable .\n
+    Wite date and time in next line after the response .  
     Context:\n{context}?\n
-    Question:\n{question}.\n
+    Question:\n{question}. + Explain in detail.\n
     Answer:
     """
-    
+    # New code
     language, confidence = langid.classify(user_question)
     print(language)
-    if(language != 'en'):
+    if(language != "en"):
         user_question = translate(user_question , language , "en")
+    # New code
     print(user_question)
+
     model = ChatGoogleGenerativeAI(model="gemini-pro", temperature=0)
     prompt = PromptTemplate(template=prompt_template, input_variables=["context", "question"])
     chain = load_qa_chain(model, chain_type="stuff", prompt=prompt)
     embeddings = GoogleGenerativeAIEmbeddings(model="models/embedding-001")  # Model for creating vector embeddings
-    new_db = FAISS.load_local("faiss_index_stackexchange", embeddings, allow_dangerous_deserialization=True)  # Load the previously saved vector db
-    docs = new_db.similarity_search(query=user_question, k = 5)
-    # mq_retriever = MultiQueryRetriever.from_llm(retriever = new_db.as_retriever(search_kwargs={'k': 1}) , llm =  model)
-    # docs = mq_retriever.get_relevant_documents(query=user_question)
+    # new_db = FAISS.load_local("faiss_index_images", embeddings, allow_dangerous_deserialization=True)  # Load the previously saved vector db
+    new_db1 = FAISS.load_local("Faiss_Index_MMM_workshop1", embeddings,allow_dangerous_deserialization=True)
+    # new_db1.merge_from(new_db)
+    mq_retriever = MultiQueryRetriever.from_llm(retriever = new_db1.as_retriever(search_kwargs={'k': 5}) , llm =  model)
+    docs = mq_retriever.get_relevant_documents(query=user_question)
+    print(docs)
     # Regular expression to find the last URL
     page_content = docs[0].page_content
     # Find all URLs in the page_content
     # urls = re.findall(r'https?://\S+', page_content)
-    pattern = r"Link1 : (.*?) \n Link2 : (.*?)$"
-    match = re.search(pattern, page_content, re.MULTILINE)
-    post_link1 = match.group(1)
-    post_link2 = match.group(2)
 
     # Get the last URL from the list
     # image_address = urls[-1] if urls else None
-    # post_link1 = urls[-1]
-    # post_link2 = urls[-2]
-    # print(post_link1)
-    # print(post_link2)
+    # post_link = urls[0]
+    image_address = find_most_relevant_image(user_question , 'Image_clarifications.xlsx')
     response = chain({"input_documents": docs, "question": user_question}, return_only_outputs=True)
-    return response, None , post_link1 , language
+    return response, image_address , None , language
 
 
 def user_input(user_question):
@@ -272,7 +312,7 @@ def user_input(user_question):
     chain = load_qa_chain(model, chain_type="stuff", prompt=prompt)
     embeddings = GoogleGenerativeAIEmbeddings(model="models/embedding-001")  # Model for creating vector embeddings
     # new_db = FAISS.load_local("faiss_index_images", embeddings, allow_dangerous_deserialization=True)  # Load the previously saved vector db
-    new_db1 = FAISS.load_local("faiss_index_DS", embeddings,allow_dangerous_deserialization=True)
+    new_db1 = FAISS.load_local("Faiss_Index_MMM_workshop", embeddings,allow_dangerous_deserialization=True)
     # new_db1.merge_from(new_db)
     mq_retriever = MultiQueryRetriever.from_llm(retriever = new_db1.as_retriever(search_kwargs={'k': 5}) , llm =  model)
     docs = mq_retriever.get_relevant_documents(query=user_question)
