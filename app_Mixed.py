@@ -25,7 +25,7 @@ if 'authenticated' not in st.session_state:
     st.session_state.authenticated = False
 
 if 'generate_response' not in st.session_state:
-    st.session_state.generate_response = False
+    st.session_state.generate_response = False 
 
 if 'chat' not in st.session_state:
     st.session_state.chat = ""
