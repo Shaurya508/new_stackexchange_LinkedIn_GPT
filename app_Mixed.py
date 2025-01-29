@@ -7,6 +7,8 @@ import requests
 from trial import translate
 import re
 from Levenshtein import distance as levenshtein_distance
+import os
+
 
 # Define the maximum number of free queries
 QUERY_LIMIT = 100
@@ -25,10 +27,12 @@ if 'authenticated' not in st.session_state:
     st.session_state.authenticated = False
 
 if 'generate_response' not in st.session_state:
-    st.session_state.generate_response = False 
+    st.session_state.generate_response = False
 
 if 'chat' not in st.session_state:
     st.session_state.chat = ""
+
+
 
 def clean_text(text):
     # Remove asterisks used for bold formatting
@@ -221,24 +225,32 @@ def create_ui():
                 # st.subheader('Translated Text')
                 st.write( translated_text)
         # image_link = get_image_link(post_link)
-        if image_address is not None:
-            try:
-                img_path = f'extracted_images/{image_address}.png'
+        # Define max width and height (adjust for smaller size while maintaining aspect ratio)
+        MAX_WIDTH = 800
+        MAX_HEIGHT = 800
+        
+        def resize_image(image):
+            # Maintain aspect ratio while resizing
+            image.thumbnail((MAX_WIDTH, MAX_HEIGHT))
+            return image
+        
+        if image_address:
+            img_extensions = ["png", "jpg", "jpeg"]
+            img_path = None
+        
+            for ext in img_extensions:
+                path = f'extracted_images/{image_address}.{ext}'
+                if os.path.exists(path):
+                    img_path = path
+                    break
+        
+            if img_path:
                 img = Image.open(img_path)
-                st.image(img, use_column_width=True)
-            except FileNotFoundError:
-                try:
-                    img_path = f'extracted_images/{image_address}.jpg'
-                    img = Image.open(img_path)
-                    st.image(img, use_column_width=True)
-                except FileNotFoundError:
-                    st.write("Image not found.")
-        #     try:
-        #         response = requests.get(image_link)
-        #         img = Image.open(BytesIO(response.content))
-        #         st.image(img, use_column_width=True)
-        #     except UnidentifiedImageError:
-        #         pass
+                img = resize_image(img)  # Resize without distortion
+                st.image(img, use_column_width=False)  # Prevent forced stretching
+            else:
+                st.write("Image not found.")
+
                     
     # Get user input at the bottom
     st.markdown("---")
