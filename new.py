@@ -38,6 +38,37 @@ from sklearn.metrics.pairwise import cosine_similarity
 import nltk
 from nltk.corpus import stopwords
 
+# Download stopwords
+nltk.download('stopwords', quiet=True)
+stop_words = set(stopwords.words('english'))
+
+def preprocess_text(text):
+    # Convert to lowercase
+    text = text.lower()
+    
+    # Remove URLs
+    text = re.sub(r'http\S+', '', text)
+    
+    # Remove special characters and digits
+    text = re.sub(r'[^a-zA-Z\s]', '', text)
+    
+    # Tokenize
+    tokens = text.split()
+    
+    # Remove stop words
+    tokens = [token for token in tokens if token not in stop_words]
+    
+    # Rejoin tokens
+    processed_text = ' '.join(tokens)
+    
+    # Remove extra whitespaces
+    processed_text = ' '.join(processed_text.split())
+    
+    return processed_text
+
+
+# from langchain_ollama import ChatOllama, OllamaEmbeddings
+
 # Load the Google API key from the .env file
 # load_dotenv()
 # API_KEY = "AIzaSyCvw_aGHyJtLxpZ4Ojy8EyaEDtPOzZM29"
@@ -253,8 +284,7 @@ def user_input1(user_question):
     Give answers according to the question asked according to to the transcripts data in the context. The context is about the MMM(Maerketing Mix Modelling) workshop.\n
     Also please write the date from the File name from the transcripts data paragraph from which answer is most relatable .\n 
     Also please write the time from the context from the transcripts data paragraph from which answer is most relatable .\n
-    Wite date and time in next line after the response . 
-    Only give the answer of this question in the output and don't give any reference of the context in the answer . 
+    Wite date and time in next line after the response .  
     Context:\n{context}?\n
     Question:\n{question}. + Explain in detail.\n
     Answer:
@@ -268,6 +298,7 @@ def user_input1(user_question):
     print(user_question)
 
     model = ChatGoogleGenerativeAI(model="gemini-pro", temperature=0)
+    # model = ChatOllama(model='deepseek-r1:8b', temperature=0)
     prompt = PromptTemplate(template=prompt_template, input_variables=["context", "question"])
     chain = load_qa_chain(model, chain_type="stuff", prompt=prompt)
     embeddings = GoogleGenerativeAIEmbeddings(model="models/embedding-001")  # Model for creating vector embeddings
@@ -275,7 +306,8 @@ def user_input1(user_question):
     new_db1 = FAISS.load_local("Faiss_Index_MMM_workshop1", embeddings,allow_dangerous_deserialization=True)
     # new_db1.merge_from(new_db)
     mq_retriever = MultiQueryRetriever.from_llm(retriever = new_db1.as_retriever(search_kwargs={'k': 5}) , llm =  model)
-    docs = mq_retriever.get_relevant_documents(query=user_question)
+    q = preprocess_text(user_question)
+    docs = mq_retriever.get_relevant_documents(query = q)
     print(docs)
     # Regular expression to find the last URL
     page_content = docs[0].page_content
@@ -296,7 +328,6 @@ def user_input(user_question):
     Also please write the date from the File name from the transcripts data paragraph from which answer is most relatable .\n 
     Also please write the time from the context from the transcripts data paragraph from which answer is most relatable .\n
     Wite date and time in next line after the response .  
-    Only give the answer of this question in the output and don't give any reference of the context in the answer . 
     Context:\n{context}?\n
     Question:\n{question}. + Explain in detail.\n
     Answer:
@@ -317,7 +348,8 @@ def user_input(user_question):
     new_db1 = FAISS.load_local("Faiss_Index_MMM_workshop", embeddings,allow_dangerous_deserialization=True)
     # new_db1.merge_from(new_db)
     mq_retriever = MultiQueryRetriever.from_llm(retriever = new_db1.as_retriever(search_kwargs={'k': 5}) , llm =  model)
-    docs = mq_retriever.get_relevant_documents(query=user_question)
+    q = preprocess_text(user_question)
+    docs = mq_retriever.get_relevant_documents(query=q)
     print(docs)
     # Regular expression to find the last URL
     page_content = docs[0].page_content
