@@ -87,44 +87,45 @@ genai.configure(api_key=st.secrets["GOOGLE_API_KEY"])
 # Function to log in to LinkedIn
 
 
-def find_most_relevant_image(user_question , excel_path = 'Image clarifications.xlsx'):
+def find_most_relevant_image(user_question, excel_path='Image_clarifications.xlsx', threshold=0.2):
     """
     Find the most relevant image from an Excel file based on a user's question.
-    
+
     Parameters:
-    excel_path (str): Path to the Excel file
     user_question (str): User's input question
-    
+    excel_path (str): Path to the Excel file
+    threshold (float): Minimum similarity score required to return an image
+
     Returns:
-    str: Name of the most relevant image
+    str or None: Name of the most relevant image or None if similarity is below the threshold
     """
-    # Download nltk resources (if not already downloaded)
-    try:
-        stopwords.words('english')
-    except:
-        nltk.download('stopwords', quiet=True)
+    # Ensure stopwords are available
+    nltk.download('stopwords', quiet=True)
     
     # Read the Excel file
     df = pd.read_excel(excel_path)
-    
-    # Preprocess the topics
+
+    # Check if 'Topic' and 'Slide number' columns exist
+    if 'Topic' not in df.columns or 'Slide number' not in df.columns:
+        raise ValueError("Excel file must contain 'Topic' and 'Slide number' columns")
+
+    # Preprocess text function
     def preprocess_text(text):
-        # Convert to lowercase
+        if pd.isna(text):
+            return ""  # Handle NaN values
         text = text.lower()
-        # Remove special characters
-        text = re.sub(r'[^a-zA-Z\s]', '', text)
-        # Remove stopwords
+        text = re.sub(r'[^a-zA-Z\s]', '', text)  # Remove special characters
         stop_words = set(stopwords.words('english'))
         words = text.split()
         words = [word for word in words if word not in stop_words]
         return ' '.join(words)
-    
+
     # Preprocess user question
     processed_question = preprocess_text(user_question)
-    
+
     # Preprocess topics
     df['processed_topic'] = df['Topic'].apply(preprocess_text)
-    
+
     # Create TF-IDF vectorizer
     vectorizer = TfidfVectorizer()
     
@@ -136,10 +137,17 @@ def find_most_relevant_image(user_question , excel_path = 'Image clarifications.
     
     # Compute cosine similarity
     cosine_similarities = cosine_similarity(tfidf_matrix[0:1], tfidf_matrix[1:])[0]
-    
+
+    # Find the highest similarity score
+    max_similarity = cosine_similarities.max()
+    print(max_similarity)
+    # If similarity is below the threshold, return None
+    if max_similarity < threshold:
+        return None
+
     # Find the index of the most similar topic
     most_similar_index = cosine_similarities.argmax()
-    
+
     # Return the corresponding slide number (image name)
     return df.iloc[most_similar_index]['Slide number']
 
