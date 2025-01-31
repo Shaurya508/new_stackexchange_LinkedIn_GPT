@@ -87,7 +87,7 @@ genai.configure(api_key=st.secrets["GOOGLE_API_KEY"])
 # Function to log in to LinkedIn
 
  
-def find_most_relevant_image(user_question, excel_path='Image_clarifications.xlsx', threshold=0.5):
+def find_most_relevant_image(user_question, excel_path='Image_clarifications.xlsx', threshold=0.3):
     """
     Find the most relevant image from an Excel file based on a user's question.
 
