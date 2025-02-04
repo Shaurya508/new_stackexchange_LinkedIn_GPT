@@ -269,9 +269,9 @@ def create_ui():
         # col1, col2 = st.columns(2)
         col1, col2 = st.columns([1,2], gap="small")
         with col1:
-            linkedin_button = st.form_submit_button(label='Chat with MMM workshop1')
+            linkedin_button = st.form_submit_button(label='Chat with MMM workshop1(Gemini-pro)')
         with col2:
-            stackexchange_button = st.form_submit_button(label='Chat with MMM workshop2')
+            stackexchange_button = st.form_submit_button(label='Chat with MMM workshop1(Gemini-flash)')
     
         if linkedin_button and question:
             st.session_state.generate_response = 'linkedin'
