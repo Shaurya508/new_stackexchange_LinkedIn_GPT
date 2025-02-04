@@ -311,7 +311,7 @@ def user_input1(user_question):
     chain = load_qa_chain(model, chain_type="stuff", prompt=prompt)
     embeddings = GoogleGenerativeAIEmbeddings(model="models/embedding-001")  # Model for creating vector embeddings
     # new_db = FAISS.load_local("faiss_index_images", embeddings, allow_dangerous_deserialization=True)  # Load the previously saved vector db
-    new_db1 = FAISS.load_local("Faiss_Index_MMM_workshop1", embeddings,allow_dangerous_deserialization=True)
+    new_db1 = FAISS.load_local("Faiss_Index_MMM_workshop", embeddings,allow_dangerous_deserialization=True)
     # new_db1.merge_from(new_db)
     mq_retriever = MultiQueryRetriever.from_llm(retriever = new_db1.as_retriever(search_kwargs={'k': 5}) , llm =  model)
     q = preprocess_text(user_question)
@@ -348,7 +348,7 @@ def user_input(user_question):
     # New code
     print(user_question)
 
-    model = ChatGoogleGenerativeAI(model="gemini-1.5-flash", temperature=0)
+    model = ChatGoogleGenerativeAI(model="gemini-pro", temperature=0)
     prompt = PromptTemplate(template=prompt_template, input_variables=["context", "question"])
     chain = load_qa_chain(model, chain_type="stuff", prompt=prompt)
     embeddings = GoogleGenerativeAIEmbeddings(model="models/embedding-001")  # Model for creating vector embeddings
