@@ -305,7 +305,7 @@ def user_input1(user_question):
     # New code
     print(user_question)
 
-    model = ChatGoogleGenerativeAI(model="gemini-pro", temperature=0)
+    model = ChatGoogleGenerativeAI(model="gemini-1.5-flash", temperature=0)
     # model = ChatOllama(model='deepseek-r1:8b', temperature=0)
     prompt = PromptTemplate(template=prompt_template, input_variables=["context", "question"])
     chain = load_qa_chain(model, chain_type="stuff", prompt=prompt)
@@ -348,7 +348,7 @@ def user_input(user_question):
     # New code
     print(user_question)
 
-    model = ChatGoogleGenerativeAI(model="gemini-pro", temperature=0)
+    model = ChatGoogleGenerativeAI(model="gemini-1.5-flash", temperature=0)
     prompt = PromptTemplate(template=prompt_template, input_variables=["context", "question"])
     chain = load_qa_chain(model, chain_type="stuff", prompt=prompt)
     embeddings = GoogleGenerativeAIEmbeddings(model="models/embedding-001")  # Model for creating vector embeddings
