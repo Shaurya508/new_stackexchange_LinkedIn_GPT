@@ -86,8 +86,8 @@ genai.configure(api_key=st.secrets["GOOGLE_API_KEY"])
 # os.environ["HUGGINGFACEHUB_API_TOKEN"]=sec_key
 # Function to log in to LinkedIn
 
- 
-def find_most_relevant_image(user_question, excel_path='Image_clarifications.xlsx', threshold=0.25):
+
+def find_most_relevant_image(user_question, excel_path='Image_clarifications.xlsx', threshold=0.2):
     """
     Find the most relevant image from an Excel file based on a user's question.
 
@@ -311,7 +311,7 @@ def user_input1(user_question):
     chain = load_qa_chain(model, chain_type="stuff", prompt=prompt)
     embeddings = GoogleGenerativeAIEmbeddings(model="models/embedding-001")  # Model for creating vector embeddings
     # new_db = FAISS.load_local("faiss_index_images", embeddings, allow_dangerous_deserialization=True)  # Load the previously saved vector db
-    new_db1 = FAISS.load_local("Faiss_Index_MMM_workshop", embeddings,allow_dangerous_deserialization=True)
+    new_db1 = FAISS.load_local("Faiss_Index_MMM_workshop1", embeddings,allow_dangerous_deserialization=True)
     # new_db1.merge_from(new_db)
     mq_retriever = MultiQueryRetriever.from_llm(retriever = new_db1.as_retriever(search_kwargs={'k': 5}) , llm =  model)
     q = preprocess_text(user_question)
@@ -348,7 +348,7 @@ def user_input(user_question):
     # New code
     print(user_question)
 
-    model = ChatGoogleGenerativeAI(model="gemini-pro", temperature=0)
+    model = ChatGoogleGenerativeAI(model="gemini-1.5-flash", temperature=0)
     prompt = PromptTemplate(template=prompt_template, input_variables=["context", "question"])
     chain = load_qa_chain(model, chain_type="stuff", prompt=prompt)
     embeddings = GoogleGenerativeAIEmbeddings(model="models/embedding-001")  # Model for creating vector embeddings
@@ -370,6 +370,49 @@ def user_input(user_question):
     image_address = find_most_relevant_image(user_question , 'Image_clarifications.xlsx')
     response = chain({"input_documents": docs, "question": user_question}, return_only_outputs=True)
     return response, image_address , None , language
+
+def user_input2(user_question):
+    prompt_template = """
+    Give answers according to the question asked according to to the transcripts data in the context. The context is about the MMM(Maerketing Mix Modelling) workshop.\n
+    Also please write the date from the File name from the transcripts data paragraph from which answer is most relatable .\n 
+    Also please write the time from the context from the transcripts data paragraph from which answer is most relatable .\n
+    Wite date and time in next line after the response .  
+    Context:\n{context}?\n
+    Question:\n{question}. + Explain in detail.\n
+    Answer:
+    """
+    # New code
+    language, confidence = langid.classify(user_question)
+    print(language)
+    if(language != "en"):
+        user_question = translate(user_question , language , "en")
+    # New code
+    print(user_question)
+
+    model = ChatGoogleGenerativeAI(model="gemini-1.5-flash", temperature=0)
+    # model = ChatOllama(model='deepseek-r1:8b', temperature=0)
+    prompt = PromptTemplate(template=prompt_template, input_variables=["context", "question"])
+    chain = load_qa_chain(model, chain_type="stuff", prompt=prompt)
+    embeddings = GoogleGenerativeAIEmbeddings(model="models/embedding-001")  # Model for creating vector embeddings
+    # new_db = FAISS.load_local("faiss_index_images", embeddings, allow_dangerous_deserialization=True)  # Load the previously saved vector db
+    new_db1 = FAISS.load_local("Faiss_Index_MMM_workshop2", embeddings,allow_dangerous_deserialization=True)
+    # new_db1.merge_from(new_db)
+    mq_retriever = MultiQueryRetriever.from_llm(retriever = new_db1.as_retriever(search_kwargs={'k': 5}) , llm =  model)
+    q = preprocess_text(user_question)
+    docs = mq_retriever.get_relevant_documents(query = q)
+    print(docs)
+    # Regular expression to find the last URL
+    page_content = docs[0].page_content
+    # Find all URLs in the page_content
+    # urls = re.findall(r'https?://\S+', page_content)
+
+    # Get the last URL from the list
+    # image_address = urls[-1] if urls else None
+    # post_link = urls[0]
+    image_address = find_most_relevant_image(user_question , 'Image_clarifications.xlsx')
+    response = chain({"input_documents": docs, "question": user_question}, return_only_outputs=True)
+    return response, image_address , None , language
+
 
 def extract_links(pdf_path):
     links = []
