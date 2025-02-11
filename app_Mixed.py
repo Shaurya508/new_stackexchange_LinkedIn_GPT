@@ -1,6 +1,6 @@
 import streamlit as st
 import pandas as pd
-from new import user_input , user_input1
+from new import user_input , user_input1 , user_input2
 from io import BytesIO
 from PIL import Image , UnidentifiedImageError
 import requests
@@ -267,34 +267,40 @@ def create_ui():
         
         # Buttons placed below the text box
         # col1, col2 = st.columns(2)
-        col1, col2 = st.columns([1,2], gap="small")
+        col1, col2, col3 = st.columns([1, 1, 1], gap="small")
         with col1:
-            linkedin_button = st.form_submit_button(label='Chat with MMM workshop1(Gemini-pro)')
+            mmm_workshop1 = st.form_submit_button(label='Chat with MMM workshop1')
         with col2:
-            stackexchange_button = st.form_submit_button(label='Chat with MMM workshop1(Gemini-flash)')
-    
-        if linkedin_button and question:
-            st.session_state.generate_response = 'linkedin'
-        elif stackexchange_button and question:
-            st.session_state.generate_response = 'stackexchange'
-    
-    if st.session_state.generate_response and question:
-        if st.session_state.query_count >= QUERY_LIMIT:
-            st.warning("You have reached the limit of free queries. Please consider our pricing options for further use.")
-        else:
-            with st.spinner("Generating response..."):
-                if st.session_state.generate_response == 'linkedin':
-                    response, image_address, post_link, language = user_input(question)
-                elif st.session_state.generate_response == 'stackexchange':
-                    response, image_address, post_link ,language = user_input1(question)
-                    
-                output_text = response.get('output_text', 'No response')  # Extract the 'output_text' from the response
-                st.session_state.chat += str(output_text)
-                st.session_state.conversation_history.append((question, output_text, image_address, post_link , language))
-                st.session_state.suggested_question = ""  # Reset the suggested question after submission
-                st.session_state.query_count += 1  # Increment the query count
-                st.session_state.generate_response = False
-                st.rerun()
+            mmm_workshop2 = st.form_submit_button(label='Chat with MMM workshop2')
+        with col3:
+            mmm_workshop3 = st.form_submit_button(label='Chat with MMM workshop3')
+        
+        if mmm_workshop1 and question:
+            st.session_state.generate_response = 'mmm_workshop1'
+        elif mmm_workshop2 and question:
+            st.session_state.generate_response = 'mmm_workshop2'
+        elif mmm_workshop3 and question:
+            st.session_state.generate_response = 'mmm_workshop3'
+        
+        if st.session_state.generate_response and question:
+            if st.session_state.query_count >= QUERY_LIMIT:
+                st.warning("You have reached the limit of free queries. Please consider our pricing options for further use.")
+            else:
+                with st.spinner("Generating response..."):
+                    if st.session_state.generate_response == 'mmm_workshop1':
+                        response, image_address, post_link, language = user_input(question)
+                    elif st.session_state.generate_response == 'mmm_workshop2':
+                        response, image_address, post_link, language = user_input1(question)
+                    elif st.session_state.generate_response == 'mmm_workshop3':
+                        response, image_address, post_link, language = user_input2(question)
+                
+            output_text = response.get('output_text', 'No response')  # Extract the 'output_text' from the response
+            st.session_state.chat += str(output_text)
+            st.session_state.conversation_history.append((question, output_text, image_address, post_link, language))
+            st.session_state.suggested_question = ""  # Reset the suggested question after submission
+            st.session_state.query_count += 1  # Increment the query count
+            st.session_state.generate_response = False
+            st.rerun()
 
 
 
