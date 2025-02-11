@@ -1,12 +1,12 @@
 import streamlit as st
 import pandas as pd
-from new import user_input , user_input1 , user_input2
+from new import user_input , user_input1 , user_input2 , user_input3
 from io import BytesIO
 from PIL import Image , UnidentifiedImageError
 import requests
 from trial import translate
 import re
-from Levenshtein import distance as levenshtein_distance 
+from Levenshtein import distance as levenshtein_distance
 import os
 
 
@@ -267,13 +267,15 @@ def create_ui():
         
         # Buttons placed below the text box
         # col1, col2 = st.columns(2)
-        col1, col2, col3 = st.columns([1, 1, 1], gap="small")
+        col1, col2, col3 , col4 = st.columns([1, 1, 1 , 1], gap="small")
         with col1:
             mmm_workshop1 = st.form_submit_button(label='Chat with MMM workshop1')
         with col2:
             mmm_workshop2 = st.form_submit_button(label='Chat with MMM workshop2')
         with col3:
             mmm_workshop3 = st.form_submit_button(label='Chat with MMM workshop3')
+        with col4:
+            tony_masterclass = st.form_submit_button(label='Chat with Tony masterclass')
         
         if mmm_workshop1 and question:
             st.session_state.generate_response = 'mmm_workshop1'
@@ -281,6 +283,8 @@ def create_ui():
             st.session_state.generate_response = 'mmm_workshop2'
         elif mmm_workshop3 and question:
             st.session_state.generate_response = 'mmm_workshop3'
+        elif tony_masterclass and question:
+            st.session_state.generate_response = 'tony_masterclass'
         
         if st.session_state.generate_response and question:
             if st.session_state.query_count >= QUERY_LIMIT:
@@ -293,6 +297,8 @@ def create_ui():
                         response, image_address, post_link, language = user_input1(question)
                     elif st.session_state.generate_response == 'mmm_workshop3':
                         response, image_address, post_link, language = user_input2(question)
+                    elif st.session_state.generate_response == 'tony_masterclass':                  
+                        response, image_address, post_link, language = user_input3(question)
                 
             output_text = response.get('output_text', 'No response')  # Extract the 'output_text' from the response
             st.session_state.chat += str(output_text)
