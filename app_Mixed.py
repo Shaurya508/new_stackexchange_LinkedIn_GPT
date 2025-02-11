@@ -6,7 +6,7 @@ from PIL import Image , UnidentifiedImageError
 import requests
 from trial import translate
 import re
-from Levenshtein import distance as levenshtein_distance
+from Levenshtein import distance as levenshtein_distance 
 import os
 
 
