@@ -420,6 +420,7 @@ def user_input3(user_question):
     Also please write the date from the File name from the transcripts data paragraph from which answer is most relatable .\n 
     Also please write the time from the context from the transcripts data paragraph from which answer is most relatable .\n
     Wite date and time in next line after the response .  
+    date is 31st January 2024 and time you can find in the context.\n
     Context:\n{context}?\n
     Question:\n{question}. + Explain in detail.\n
     Answer:
